@@ -84,10 +84,12 @@ end
 
 Training_Pyramid_Vectors = SpatialPyramidVasilakis(training_vector_images, ...
     train_features,Dictionary);
+
 nz_Train = nnz(Training_Pyramid_Vectors);
 
 Testing_Pyramid_Vectors = SpatialPyramidVasilakis(testing_vector_images, ...
     test_features,Dictionary);
+
 nz_Test = nnz(Testing_Pyramid_Vectors);
 
 if nz_Train <= (size(Training_Pyramid_Vectors,1)* ...
@@ -102,20 +104,18 @@ if nz_Train <= (size(Training_Pyramid_Vectors,1)* ...
 
     S_Test = spalloc(size(Training_Pyramid_Vectors,1), ...
                       size(Training_Pyramid_Vectors,2),nz_Test);
-
+    
     S_Train = sparse(Training_Pyramid_Vectors);
     S_Test = sparse(Testing_Pyramid_Vectors);
     
-    %clear Training_Pyramid_Vectors Testing_Pyramid_Vectors
+    clear Training_Pyramid_Vectors Testing_Pyramid_Vectors
     % In case you need to find the indices of the data
     % [row,col,val] = find(S_Train);
 end
 %% Building the histogram intersection of images
 
-K_train = hist_intersection_Vasilakis(Training_Pyramid_Vectors, ...
-    Training_Pyramid_Vectors);
-K_test = hist_intersection_Vasilakis(Testing_Pyramid_Vectors, ...
-    Training_Pyramid_Vectors);
+K_train = hist_intersection_Vasilakis(S_Train,S_Train);
+K_test = hist_intersection_Vasilakis(S_Test,S_Train);
 %% Training a Classifier 
 
 % classifier = fitcecoc(K_train,Trainds.Labels,'Coding','onevsall', ...
