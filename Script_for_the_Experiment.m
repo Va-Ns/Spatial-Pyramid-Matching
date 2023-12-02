@@ -18,8 +18,8 @@ newlabels = countEachLabel(splitDatastore);
 
 tic
 %% Generate SIFT descriptors using Dense SIFT.
-train_features = denseSIFTVasilakis(Trainds);
-test_features = denseSIFTVasilakis(Testds);
+train_features = denseSIFTVasilakis(Trainds,"Grid_Spacing",8);
+test_features = denseSIFTVasilakis(Testds,"Grid_Spacing",8);
 
 %% Formating the Dictionary and extracting the SIFT matrices for the sets
 for k = 1: length(train_features)
@@ -130,20 +130,7 @@ if exist("S_K_train","var")
     confusionMatrix_fitcecoc = confusionmat(Testds.Labels, ...
                                         predictedLabels_fitcecoc);
     fitcecoc_Accuracy = (sum(diag(confusionMatrix_fitcecoc))/ ...
-                         sum(confusionMatrix_fitcecoc(:)))*100
-
-
-    classifier = fitcauto(gpuArray(S_K_train),Trainds.Labels, ...
-    'OptimizeHyperparameters','auto','HyperparameterOptimizationOptions', ...
-     struct('KFold',10)); 
-
-    % Perform predictions 
-    [predictedLabels, scores]= predict(classifier,S_K_test);
-
-    % Validate the performance of the model 
-
-    confusionMatrix = confusionmat(Testds.Labels,predictedLabels);
-    Accuracy = (sum(diag(confusionMatrix))/sum(confusionMatrix(:)))*100
+                         sum(confusionMatrix_fitcecoc(:)))*100;
 
 elseif exist("K_train","var")
 
@@ -159,21 +146,7 @@ elseif exist("K_train","var")
     confusionMatrix_fitcecoc = confusionmat(Testds.Labels, ...
                                         predictedLabels_fitcecoc);
     fitcecoc_Accuracy = (sum(diag(confusionMatrix_fitcecoc))/ ...
-                         sum(confusionMatrix_fitcecoc(:)))*100
-
-
-    classifier = fitcauto(gpuArray(K_train),Trainds.Labels, ...
-    'OptimizeHyperparameters','auto','HyperparameterOptimizationOptions', ...
-     struct('KFold',10)); 
-
-    % Perform predictions 
-    [predictedLabels, scores]= predict(classifier,K_test);
-
-    % Validate the performance of the model 
-
-    confusionMatrix = confusionmat(Testds.Labels,predictedLabels);
-    Accuracy = (sum(diag(confusionMatrix))/sum(confusionMatrix(:)))*100
-
+                         sum(confusionMatrix_fitcecoc(:)))*100;
 end
 
 
