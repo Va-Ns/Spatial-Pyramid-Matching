@@ -1,37 +1,20 @@
-%% Clean-up
-%clear;clc;close('all');
-%%
 delete(gcp('nocreate'))
 maxWorkers = maxNumCompThreads;
 disp("Maximum number of workers: " + maxWorkers);
 pool=parpool(maxWorkers/2);
 
 %% Get images directory and form the imageDatastore
-fileLocation = uigetdir();
+fileLocation =['C:\Users\Nik_Vas\Documents\GitHub\Spatial-Pyramid-Matching' ...
+               '\scene_categories'];
 datastore = imageDatastore(fileLocation,"IncludeSubfolders",true, ...
     "LabelSource","foldernames");
 
-%% Counting the number of labels 
 initialLabels = countEachLabel(datastore);
 
-if diff(initialLabels{:,2})~=0
-    msg = 'The data do not have equal number of labels';
-    uiwait(msgbox(msg,'Message'))
-end
-
-% If you want to also return the tables of the label count of the training
-% and testing datastores, use flag
-
-
-%% Splitting the datastore
 splitDatastore = splitEachLabel(datastore,1/4);
 newlabels = countEachLabel(splitDatastore);
 
-[Trainds,Testds] = splitTheDatastore(splitDatastore,newlabels);
-
-% if flag = true, follow the syntax bellow:
-% [Trainds,Testds,training_labels,testing_labels] = ...
-% splitTheDatastore(datastore,initialLabels,flag,true);
+[Trainds,Testds] = splitTheDatastore2(splitDatastore,newlabels);
 
 tic
 %% Generate SIFT descriptors using Dense SIFT.

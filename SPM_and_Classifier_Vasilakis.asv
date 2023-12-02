@@ -1,5 +1,5 @@
 %% Clean-up
-%clear;clc;close('all');
+clear;clc;close('all');
 %%
 delete(gcp('nocreate'))
 maxWorkers = maxNumCompThreads;
@@ -98,8 +98,8 @@ nz_Test = nnz(Testing_Pyramid_Vectors);
 
 if nz_Train <= (size(Training_Pyramid_Vectors,1)* ...
         size(Training_Pyramid_Vectors,2))/3 && nz_Test <=... 
-        (size(Testing_Pyramid_Vectors,1)* ...
-        size(Testing_Pyramid_Vectors,2))/3
+        ( size(Testing_Pyramid_Vectors,1)* ...
+        size(Testing_Pyramid_Vectors,2) )/3
 
     disp('Using Sparse Matrix')
 
@@ -134,7 +134,6 @@ end
 %% Training a Classifier 
 
 if exist("S_K_train","var")
-
     t = templateSVM('SaveSupportVectors',true,'Standardize',true,'Type', ...
                     'classification');
     [Model1,HyperparameterOptimizationResults] = fitcecoc(S_K_train, ...
@@ -160,7 +159,7 @@ if exist("S_K_train","var")
     % Validate the performance of the model 
 
     confusionMatrix = confusionmat(Testds.Labels,predictedLabels);
-    Accuracy = (sum(diag(confusionMatrix))/sum(confusionMatrix(:)))*100
+    Accuracy = ( sum(diag(confusionMatrix)) / sum(confusionMatrix(:)) )*100
 
 elseif exist("K_train","var")
 
@@ -175,6 +174,7 @@ elseif exist("K_train","var")
     [predictedLabels_fitcecoc, scores_fitcecoc]= predict(Model1,K_test);
     confusionMatrix_fitcecoc = confusionmat(Testds.Labels, ...
                                         predictedLabels_fitcecoc);
+    
     fitcecoc_Accuracy = (sum(diag(confusionMatrix_fitcecoc))/ ...
                          sum(confusionMatrix_fitcecoc(:)))*100
 
@@ -184,12 +184,12 @@ elseif exist("K_train","var")
      struct('KFold',10)); 
 
     % Perform predictions 
-    [predictedLabels, scores]= predict(classifier,K_test);
+    [predictedLabels, scores]= predict(classifier,S_K_test);
 
     % Validate the performance of the model 
 
     confusionMatrix = confusionmat(Testds.Labels,predictedLabels);
-    Accuracy = (sum(diag(confusionMatrix))/sum(confusionMatrix(:)))*100
+    Accuracy = ( sum(diag(confusionMatrix)) / sum(confusionMatrix(:)) )*100
 
 end
 
