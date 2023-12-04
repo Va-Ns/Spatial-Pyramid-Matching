@@ -148,4 +148,4 @@ elseif exist("K_train","var")
 end
 
 
-Algorithms_time = toc;
+Algorithms_time = toc
