@@ -1,42 +1,25 @@
-%% Clean-up
-clear;clc;close('all');
-%%
 delete(gcp('nocreate'))
 maxWorkers = maxNumCompThreads;
 disp("Maximum number of workers: " + maxWorkers);
 pool=parpool(maxWorkers/2);
 
 %% Get images directory and form the imageDatastore
-fileLocation = uigetdir();
+fileLocation =['C:\Users\Nik_Vas\Documents\GitHub\Spatial-Pyramid-Matching' ...
+               '\scene_categories'];
 datastore = imageDatastore(fileLocation,"IncludeSubfolders",true, ...
     "LabelSource","foldernames");
 
-%% Counting the number of labels 
 initialLabels = countEachLabel(datastore);
 
-if diff(initialLabels{:,2})~=0
-    msg = 'The data do not have equal number of labels';
-    uiwait(msgbox(msg,'Message'))
-end
-
-% If you want to also return the tables of the label count of the training
-% and testing datastores, use flag
-
-
-%% Splitting the datastore
 splitDatastore = splitEachLabel(datastore,1/4);
 newlabels = countEachLabel(splitDatastore);
 
-[Trainds,Testds] = splitTheDatastore(splitDatastore,newlabels);
-
-% if flag = true, follow the syntax bellow:
-% [Trainds,Testds,training_labels,testing_labels] = ...
-% splitTheDatastore(datastore,initialLabels,flag,true);
+[Trainds,Testds] = splitTheDatastore2(splitDatastore,newlabels);
 
 tic
 %% Generate SIFT descriptors using Dense SIFT.
-train_features = denseSIFTVasilakis(Trainds);
-test_features = denseSIFTVasilakis(Testds);
+train_features = denseSIFTVasilakis(Trainds,"Grid_Spacing",8);
+test_features = denseSIFTVasilakis(Testds,"Grid_Spacing",8);
 
 %% Formating the Dictionary and extracting the SIFT matrices for the sets
 for k = 1: length(train_features)
@@ -82,8 +65,6 @@ for i = 1 :length(test_features)
     reset(test_features{i});
 end 
 
-
-
 Training_Pyramid_Vectors = SpatialPyramidVasilakis(training_vector_images, ...
     train_features,Dictionary,"Levels",2);
 
@@ -98,8 +79,8 @@ nz_Test = nnz(Testing_Pyramid_Vectors);
 
 if nz_Train <= (size(Training_Pyramid_Vectors,1)* ...
         size(Training_Pyramid_Vectors,2))/3 && nz_Test <=... 
-        ( size(Testing_Pyramid_Vectors,1)* ...
-        size(Testing_Pyramid_Vectors,2) )/3
+        (size(Testing_Pyramid_Vectors,1)* ...
+        size(Testing_Pyramid_Vectors,2))/3
 
     disp('Using Sparse Matrix')
 
@@ -134,64 +115,37 @@ end
 %% Training a Classifier 
 
 if exist("S_K_train","var")
+
     t = templateSVM('SaveSupportVectors',true,'Standardize',true,'Type', ...
                     'classification');
-    [Model1,HyperparameterOptimizationResults] = fitcecoc(S_K_train, ...
+    [Model,HyperparameterOptimizationResults] = fitcecoc(S_K_train, ...
         Trainds.Labels,"Learners",t,"Coding", "onevsall", ...
         'OptimizeHyperparameters',{'BoxConstraint','KernelScale'}, ...
         'HyperparameterOptimizationOptions',struct('KFold',10,'UseParallel', ...
          true));
 
-    [predictedLabels_fitcecoc, scores_fitcecoc]= predict(Model1,S_K_test);
+    [predictedLabels, scores]= predict(Model,S_K_test);
     confusionMatrix_fitcecoc = confusionmat(Testds.Labels, ...
-                                        predictedLabels_fitcecoc);
+                                        predictedLabels);
     fitcecoc_Accuracy = (sum(diag(confusionMatrix_fitcecoc))/ ...
-                         sum(confusionMatrix_fitcecoc(:)))*100
-
-
-    classifier = fitcauto(gpuArray(S_K_train),Trainds.Labels, ...
-    'OptimizeHyperparameters','auto','HyperparameterOptimizationOptions', ...
-     struct('KFold',10)); 
-
-    % Perform predictions 
-    [predictedLabels, scores]= predict(classifier,S_K_test);
-
-    % Validate the performance of the model 
-
-    confusionMatrix = confusionmat(Testds.Labels,predictedLabels);
-    Accuracy = ( sum(diag(confusionMatrix)) / sum(confusionMatrix(:)) )*100
+                         sum(confusionMatrix_fitcecoc(:)))*100;
 
 elseif exist("K_train","var")
 
     t = templateSVM('SaveSupportVectors',true,'Standardize',true,'Type', ...
                     'classification');
-    [Model1,HyperparameterOptimizationResults] = fitcecoc(K_train, ...
+    [Model,HyperparameterOptimizationResults] = fitcecoc(K_train, ...
         Trainds.Labels,"Learners",t,"Coding", "onevsall", ...
         'OptimizeHyperparameters',{'BoxConstraint','KernelScale'}, ...
         'HyperparameterOptimizationOptions',struct('KFold',10,'UseParallel', ...
          true));
 
-    [predictedLabels_fitcecoc, scores_fitcecoc]= predict(Model1,K_test);
+    [predictedLabels, scores]= predict(Model,K_test);
     confusionMatrix_fitcecoc = confusionmat(Testds.Labels, ...
-                                        predictedLabels_fitcecoc);
-    
+                                        predictedLabels);
     fitcecoc_Accuracy = (sum(diag(confusionMatrix_fitcecoc))/ ...
-                         sum(confusionMatrix_fitcecoc(:)))*100
-
-
-    classifier = fitcauto(gpuArray(K_train),Trainds.Labels, ...
-    'OptimizeHyperparameters','auto','HyperparameterOptimizationOptions', ...
-     struct('KFold',10)); 
-
-    % Perform predictions 
-    [predictedLabels, scores]= predict(classifier,S_K_test);
-
-    % Validate the performance of the model 
-
-    confusionMatrix = confusionmat(Testds.Labels,predictedLabels);
-    Accuracy = ( sum(diag(confusionMatrix)) / sum(confusionMatrix(:)) )*100
-
+                         sum(confusionMatrix_fitcecoc(:)))*100;
 end
 
 
-Algorithms_time = toc;
+Algorithms_time = toc
