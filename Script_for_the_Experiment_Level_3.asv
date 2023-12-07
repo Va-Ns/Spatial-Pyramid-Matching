@@ -1,9 +1,3 @@
-clear;clc
-delete(gcp('nocreate'))
-maxWorkers = maxNumCompThreads;
-disp("Maximum number of workers: " + maxWorkers);
-pool=parpool(maxWorkers);
-
 tic
 for o = 1:10
 
@@ -70,12 +64,12 @@ for o = 1:10
     end
 
     Training_Pyramid_Vectors = SpatialPyramidVasilakis(training_vector_images, ...
-        train_features,Dictionary,"Levels",2);
+        train_features,Dictionary,"Levels",3);
 
     nz_Train = nnz(Training_Pyramid_Vectors);
 
     Testing_Pyramid_Vectors = SpatialPyramidVasilakis(testing_vector_images, ...
-        test_features,Dictionary,"Levels",2);
+        test_features,Dictionary,"Levels",3);
 
 
     % Check for use of Sparse Matrix
@@ -122,45 +116,45 @@ for o = 1:10
 
         t = templateSVM('SaveSupportVectors',true,'Standardize',true,'Type', ...
             'classification');
-        Models(o).Model = fitcecoc(S_K_train, Trainds.Labels,"Learners",t, ...
+        Models_3(o).Model = fitcecoc(S_K_train, Trainds.Labels,"Learners",t, ...
             "Coding", "onevsall",'OptimizeHyperparameters', ...
-            {'BoxConstraint'}, ...
+            {'BoxConstraint','KernelScale'}, ...
             'HyperparameterOptimizationOptions',struct('KFold',10, ...
             'UseParallel',true,'Optimizer','bayesopt','ShowPlots',false, ...
             'Verbose',0));
 
-        HyperparameterOptimizationResults{o} = Models(o).Model.HyperparameterOptimizationResults.XAtMinEstimatedObjective;
+        HyperparameterOptimizationResults_3{o} = Models_3(o).Model.HyperparameterOptimizationResults.XAtMinEstimatedObjective;
 
-        [predictedLabels, scores]= predict(Models(o).Model,S_K_test);
+        [predictedLabels, scores]= predict(Models_3(o).Model,S_K_test);
         confusionMatrix_fitcecoc = confusionmat(Testds.Labels, ...
             predictedLabels);
 
-        Accuracy(o) = (sum(diag(confusionMatrix_fitcecoc))/ ...
+        Accuracy_Level_3(o) = (sum(diag(confusionMatrix_fitcecoc))/ ...
             sum(confusionMatrix_fitcecoc(:)))*100;
 
     elseif exist("K_train","var")
 
         t = templateSVM('SaveSupportVectors',true,'Standardize',true,'Type', ...
             'classification');
-        Models(o).Model = fitcecoc(K_train,Trainds.Labels,"Learners",t, ...
+        Models_3(o).Model = fitcecoc(K_train,Trainds.Labels,"Learners",t, ...
             "Coding", "onevsall",'OptimizeHyperparameters', ...
-            {'BoxConstraint'}, ...
+            {'BoxConstraint','KernelScale'}, ...
             'HyperparameterOptimizationOptions',struct('KFold',10, ...
             'UseParallel',true,'Optimizer','bayesopt','ShowPlots',false, ...
             'Verbose',0));
 
-        HyperparameterOptimizationResults{o} = Models(o).Model.HyperparameterOptimizationResults.XAtMinEstimatedObjective;
+        HyperparameterOptimizationResults_3{o} = Models_3(o).Model.HyperparameterOptimizationResults.XAtMinEstimatedObjective;
 
-        [predictedLabels, scores]= predict(Models(o).Model,K_test);
+        [predictedLabels, scores]= predict(Models_3(o).Model,K_test);
         confusionMatrix_fitcecoc = confusionmat(Testds.Labels, ...
             predictedLabels);
 
-        Accuracy(o) = (sum(diag(confusionMatrix_fitcecoc))/ ...
+        Accuracy_Level_3(o) = (sum(diag(confusionMatrix_fitcecoc))/ ...
             sum(confusionMatrix_fitcecoc(:)))*100;
     end
 
-    clearvars -except HyperparameterOptimizationResults Accuracy Models
+    clearvars -except HyperparameterOptimizationResults_3 Accuracy_Level_3 Models_3
     clc
 end
 Algorithms_time = toc;
-Mean_Accuracy = mean(Accuracy);
+Mean_Accuracy_Level_3 = mean(Accuracy_Level_3);
