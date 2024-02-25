@@ -30,10 +30,10 @@ arguments (Input)
 end
 
 fprintf("Using: \n Angles = %d \n Number of bins = %d \n Angle " + ...
-    "attenuation = %d \n Grid Spacing = %d \n Patch size = %d \n" + ...
-    " Sigma edge = %d\n\n",Options.Angles, ...
-    Options.numBins,Options.Angle_Attenuation,Options.Grid_Spacing, ...
-    Options.Patch_Size,Options.Sigma_Edge);
+        "attenuation = %d \n Grid Spacing = %d \n Patch size = %d \n" + ...
+        " Sigma edge = %d\n\n",Options.Angles, ...
+        Options.numBins,Options.Angle_Attenuation,Options.Grid_Spacing, ...
+        Options.Patch_Size,Options.Sigma_Edge);
 
 i=0;
 
@@ -88,7 +88,7 @@ while hasdata(inputds)
 
     [GX,GY] = gaussVasilakis(Options.Sigma_Edge);
 
-    % add boundary
+    % Add boundary
     img = [img(2:-1:1,:,:); img; img(end:-1:end-1,:,:)];
     img = [img(:,2:-1:1,:) img img(:,end:-1:end-1,:)];
 
@@ -143,7 +143,7 @@ while hasdata(inputds)
         %histogram angle (of the eight we are searching for) and the
         % orientation of the gradient.
         tmp = (cosI*cos(angles(a))+sinI*sin(angles(a))).^...
-            Options.Angle_Attenuation;
+                                                Options.Angle_Attenuation;
         tmp = tmp .* (tmp > 0);
 
         % weight by magnitude
@@ -160,7 +160,7 @@ while hasdata(inputds)
     % Convolution formulation:
 
     % Initialize the weighting kernel with a size equal to the size of the
-    % patch (here 16x16)
+    % patch (here 16-by-16)
     weight_kernel = zeros(Options.Patch_Size,Options.Patch_Size);
 
     % Calculation of the patch centre.
@@ -214,20 +214,24 @@ while hasdata(inputds)
     % So here:
     %
     % sample_x = | 1 	5	9	13	17 |
-    %            | 1	5	9	13	17 | | 1	5	9	13	17 | | 1	5	9	13	17 | | 1	5	9
-    %            13	17 |
+    %            | 1	5	9	13	17 | 
+    %            | 1	5	9	13	17 | 
+    %            | 1	5	9	13	17 | 
+    %            | 1	5	9   13	17 |
     %
     % Conversely for sample_y:
     %
     % sample_y = | 1 	1	1	1	1  |
-    %            | 5	5	5	5	5  | | 9	9	9	9	9  | | 13	13	13	13	13 | | 17	17
-    %            17	17	17 |
+    %            | 5	5	5	5	5  | 
+    %            | 9	9	9	9	9  | 
+    %            | 13	13	13	13	13 | 
+    %            | 17	17  17	17	17 |
 
     [sample_x, sample_y] = meshgrid(linspace(1,Options.Patch_Size+1,Options.numBins+1));
     %                                          ^^^^^^^^^^^^ ^^^^^^^^^^
     % Γιατί patch_size+1 και num_bins+1; Γιατί με τον τρόπο αυτό
     % εξασφαλίζουμε ότι το πλέγμα που δουλεύουμε θα έχει πάντοτε την σωστή
-    % μορφή, είτε αυτή είναι άρτια (π.χ 4x4) είτε περιττή (π.χ 5x5).
+    % μορφή, είτε αυτή είναι άρτια (π.χ 4-by-4) είτε περιττή (π.χ 5-by-5).
 
     sample_x = sample_x(1:Options.numBins,1:Options.numBins);
     sample_x = sample_x(:)-Options.Patch_Size/2; % We convert the
@@ -335,9 +339,9 @@ while hasdata(inputds)
     [grid_x,grid_y] = meshgrid(grid_x, grid_y);
     [nrows, ncols, cols] = size(sift_arr);
 
-        %% Normalizing the SIFT desriptors
+    %% Normalizing the SIFT desriptors
 
-    % normalize SIFT descriptors slow, good normalization that respects the
+    % Normalize SIFT descriptors slow, good normalization that respects the
     % flat areas
 
     % We form a global matrix, where the first dimension is the product of

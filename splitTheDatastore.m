@@ -13,14 +13,16 @@ function varargout = splitTheDatastore(datastore,newlabels, ...
 % Inputs:
 % -------------------------------------------------------------------------
 % => datastore:     The imageDatastore that contains the raw data.
+%
+% => newlabels:     A variable that contains the labels that are extracted 
+%                   from the initial datastore.
 % => optional:      Char or string variable that takes two discrete values: 
 %                   "Equal" or "Proceed". Based on one of the two, the 
 %                   appropriate measures are taken to treat the splitting 
 %                   procedure.
-% => initialLabels: A variable that contains the labels that are extracted 
-%                   from the initial datastore.
 
 % Outputs: 
+%
 % => varargout:     As the name depicts, a variable argument output, that
 %                   based on the option variable returns the training and 
 %                   testing variables.If the optional variable's optional 
