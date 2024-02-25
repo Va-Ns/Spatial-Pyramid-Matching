@@ -24,8 +24,8 @@ end
     numClusters = Options.numClusters;
 
     fprintf("Using: \n\n Batch Size = %d \n\n maxIter =%d \n\n " + ...
-        "Replicates =%d \n\n numClusters = %d\n\n",batchSize,maxIter,replicates, ...
-        numClusters);
+            "Replicates =%d \n\n numClusters = %d\n\n", ...
+            batchSize,maxIter,replicates,numClusters);
 
     % Ensure data is in single precision (float32)
     dataGPU = gpuArray(single(data));
@@ -67,6 +67,7 @@ end
         % Calculate cost for the final centroids
         [~, ~, sumd] = kmeans(dataGPU, numClusters, 'Start', ...
             currentCentroids,"MaxIter",10,"Display","iter");
+        
         totalCost = sum(sumd);
 
         % Update the shared variables
