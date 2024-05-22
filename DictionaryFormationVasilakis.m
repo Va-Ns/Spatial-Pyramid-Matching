@@ -26,7 +26,7 @@ function [Dictionary] =DictionaryFormationVasilakis(train_features,Options)
     % variables and create a collective matrix that contains all the
     % descriptors of all the training images
     
-    parfor i = 1:length(train_features)
+    for i = 1:length(train_features)
     
         feature_data = read(train_features{i});
 

@@ -1,9 +1,10 @@
+s = rng("default");
 tic
 for o = 1:10
 
     %% Get images directory and form the imageDatastore
-    fileLocation =['C:\Users\Nik_Vas\Documents\GitHub\Spatial-Pyramid-Matching' ...
-        '\scene_categories'];
+    fileLocation = ['C:\Users\vasil\OneDrive\Υπολογιστής\Github projects\' ...
+                   'Spatial Pyramid Matching\scene_categories'];
     datastore = imageDatastore(fileLocation,"IncludeSubfolders",true, ...
         "LabelSource","foldernames");
 
@@ -19,11 +20,11 @@ for o = 1:10
     train_features = denseSIFTVasilakis(Trainds,"Grid_Spacing",8);
     test_features = denseSIFTVasilakis(Testds,"Grid_Spacing",8);
 
-    %% Formating the Dictionary and extracting the SIFT matrices for the sets
+    %% Formatting the Dictionary and extracting the SIFT matrices for the sets
     for k = 1: length(train_features)
         reset(train_features{k})
     end
-    Dictionary = DictionaryFormationVasilakis(train_features);
+    Dictionary = DictionaryFormationVasilakis(train_features,"Centers",400);
 
     %% Histogram Representation of Images
     % Dictionary = gather(Dictionary);
@@ -66,40 +67,40 @@ for o = 1:10
     Training_Pyramid_Vectors = SpatialPyramidVasilakis(training_vector_images, ...
         train_features,Dictionary,"Levels",3);
 
-    nz_Train = nnz(Training_Pyramid_Vectors);
+    % nz_Train = nnz(Training_Pyramid_Vectors);
 
     Testing_Pyramid_Vectors = SpatialPyramidVasilakis(testing_vector_images, ...
         test_features,Dictionary,"Levels",3);
 
 
     % Check for use of Sparse Matrix
-    nz_Test = nnz(Testing_Pyramid_Vectors);
-
-    if nz_Train <= (size(Training_Pyramid_Vectors,1)* ...
-            size(Training_Pyramid_Vectors,2))/3 && nz_Test <=...
-            (size(Testing_Pyramid_Vectors,1)* ...
-            size(Testing_Pyramid_Vectors,2))/3
-
-        disp('Using Sparse Matrix')
-
-        S_Train = spalloc(size(Training_Pyramid_Vectors,1), ...
-            size(Training_Pyramid_Vectors,2),nz_Train);
-
-        S_Test = spalloc(size(Training_Pyramid_Vectors,1), ...
-            size(Training_Pyramid_Vectors,2),nz_Test);
-
-        S_Train = sparse(Training_Pyramid_Vectors);
-        S_Test = sparse(Testing_Pyramid_Vectors);
-
-        clear Training_Pyramid_Vectors Testing_Pyramid_Vectors
-        % In case you need to find the indices of the data
-        % [row,col,val] = find(S_Train);
-
-        % Building the histogram intersection of images
-        S_K_train = hist_intersection_Vasilakis(S_Train,S_Train);
-        S_K_test = hist_intersection_Vasilakis(S_Test,S_Train);
-
-    else
+    % nz_Test = nnz(Testing_Pyramid_Vectors);
+    % 
+    % if nz_Train <= (size(Training_Pyramid_Vectors,1)* ...
+    %         size(Training_Pyramid_Vectors,2))/3 && nz_Test <=...
+    %         (size(Testing_Pyramid_Vectors,1)* ...
+    %         size(Testing_Pyramid_Vectors,2))/3
+    % 
+    %     disp('Using Sparse Matrix')
+    % 
+    %     S_Train = spalloc(size(Training_Pyramid_Vectors,1), ...
+    %         size(Training_Pyramid_Vectors,2),nz_Train);
+    % 
+    %     S_Test = spalloc(size(Training_Pyramid_Vectors,1), ...
+    %         size(Training_Pyramid_Vectors,2),nz_Test);
+    % 
+    %     S_Train = sparse(Training_Pyramid_Vectors);
+    %     S_Test = sparse(Testing_Pyramid_Vectors);
+    % 
+    %     clear Training_Pyramid_Vectors Testing_Pyramid_Vectors
+    %     % In case you need to find the indices of the data
+    %     % [row,col,val] = find(S_Train);
+    % 
+    %     % Building the histogram intersection of images
+    %     S_K_train = hist_intersection_Vasilakis(S_Train,S_Train);
+    %     S_K_test = hist_intersection_Vasilakis(S_Test,S_Train);
+    % 
+    % else
 
         % Building the histogram intersection of images
 
@@ -108,42 +109,42 @@ for o = 1:10
         K_test = hist_intersection_Vasilakis(Testing_Pyramid_Vectors, ...
             Training_Pyramid_Vectors);
 
-    end
+    % end
 
     %% Training a Classifier
 
-    if exist("S_K_train","var")
+    % if exist("S_K_train","var")
+    % 
+    %     t = templateSVM('SaveSupportVectors',true,'Standardize',true,'Type', ...
+    %         'classification');
+    %     Models_3(o).Model = fitcecoc(S_K_train, Trainds.Labels,"Learners",t, ...
+    %         "Coding", "onevsall",'OptimizeHyperparameters', ...
+    %         {'BoxConstraint'}, ...
+    %         'HyperparameterOptimizationOptions',struct('KFold',10, ...
+    %         'UseParallel',true,'Optimizer','bayesopt','ShowPlots',false, ...
+    %         'Verbose',0));
+    % 
+    %     HyperparameterOptimizationResults_3{o} = Models_3(o).Model.HyperparameterOptimizationResults.XAtMinEstimatedObjective;
+    % 
+    %     [predictedLabels, scores]= predict(Models_3(o).Model,S_K_test);
+    %     confusionMatrix_fitcecoc = confusionmat(Testds.Labels, ...
+    %         predictedLabels);
+    % 
+    %     Accuracy_Level_3(o) = (sum(diag(confusionMatrix_fitcecoc))/ ...
+    %         sum(confusionMatrix_fitcecoc(:)))*100;
+    % 
+    % elseif exist("K_train","var")
 
         t = templateSVM('SaveSupportVectors',true,'Standardize',true,'Type', ...
             'classification');
-        Models_3(o).Model = fitcecoc(S_K_train, Trainds.Labels,"Learners",t, ...
+        Models_3(o).Model = fitcecoc(gpuArray(K_train),Trainds.Labels,"Learners",t, ...
             "Coding", "onevsall",'OptimizeHyperparameters', ...
             {'BoxConstraint'}, ...
-            'HyperparameterOptimizationOptions',struct('KFold',10, ...
-            'UseParallel',true,'Optimizer','bayesopt','ShowPlots',false, ...
-            'Verbose',0));
+            'HyperparameterOptimizationOptions',struct('KFold',10,'Optimizer','bayesopt', ...
+            'ShowPlots',false,'Verbose',0));
 
-        HyperparameterOptimizationResults_3{o} = Models_3(o).Model.HyperparameterOptimizationResults.XAtMinEstimatedObjective;
-
-        [predictedLabels, scores]= predict(Models_3(o).Model,S_K_test);
-        confusionMatrix_fitcecoc = confusionmat(Testds.Labels, ...
-            predictedLabels);
-
-        Accuracy_Level_3(o) = (sum(diag(confusionMatrix_fitcecoc))/ ...
-            sum(confusionMatrix_fitcecoc(:)))*100;
-
-    elseif exist("K_train","var")
-
-        t = templateSVM('SaveSupportVectors',true,'Standardize',true,'Type', ...
-            'classification');
-        Models_3(o).Model = fitcecoc(K_train,Trainds.Labels,"Learners",t, ...
-            "Coding", "onevsall",'OptimizeHyperparameters', ...
-            {'BoxConstraint'}, ...
-            'HyperparameterOptimizationOptions',struct('KFold',10, ...
-            'UseParallel',true,'Optimizer','bayesopt','ShowPlots',false, ...
-            'Verbose',0));
-
-        HyperparameterOptimizationResults_3{o} = Models_3(o).Model.HyperparameterOptimizationResults.XAtMinEstimatedObjective;
+        HyperparameterOptimizationResults_3{o} = ...
+            Models_3(o).Model.HyperparameterOptimizationResults.XAtMinEstimatedObjective;
 
         [predictedLabels, scores]= predict(Models_3(o).Model,K_test);
         confusionMatrix_fitcecoc = confusionmat(Testds.Labels, ...
@@ -151,7 +152,7 @@ for o = 1:10
 
         Accuracy_Level_3(o) = (sum(diag(confusionMatrix_fitcecoc))/ ...
             sum(confusionMatrix_fitcecoc(:)))*100;
-    end
+    % end
 
     clearvars -except HyperparameterOptimizationResults_3 Accuracy_Level_3 Models_3
     clc

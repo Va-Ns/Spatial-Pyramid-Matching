@@ -21,7 +21,7 @@ tic
 train_features = denseSIFTVasilakis(Trainds,"Grid_Spacing",8);
 test_features = denseSIFTVasilakis(Testds,"Grid_Spacing",8);
 
-%% Formating the Dictionary and extracting the SIFT matrices for the sets
+%% Formatting the Dictionary and extracting the SIFT matrices for the sets
 for k = 1: length(train_features)
         reset(train_features{k})
 end

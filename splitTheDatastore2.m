@@ -49,9 +49,9 @@ if numel(nargin) < 4
 
             % fprintf('So you have chosen...biases\n')
             [Trainds,Testds] = splitEachLabel(datastore,0.7,'randomized');
-            trainlabelcount=countEachLabel(Trainds);
-            testlabelcount=countEachLabel(Testds);
-            
+            trainlabelcount = countEachLabel(Trainds);
+            testlabelcount = countEachLabel(Testds);
+             
             
             if optional.flag
                 varargout = {Trainds,Testds,trainlabelcount,testlabelcount};
