@@ -1,15 +1,11 @@
-function [Dictionary] =DictionaryFormationVasilakis(train_features,Options)
+function [Dictionary] =DictionaryFormationVN(train_features,Options)
 
     arguments (Input)
 
     train_features          {mustBeA(train_features,"cell")}
-
-    
-
     
     Options.Centers         {mustBeInteger,mustBePositive} = 200
     
-
     end
     
     % Preallocation of the size of the Centers variable as it will be of
@@ -44,8 +40,7 @@ function [Dictionary] =DictionaryFormationVasilakis(train_features,Options)
     
     validateattributes(Options.Centers,'numeric',{'<',numKeypoints})
     
-    [bestCentroids, bestCost, timeElapsed] = ...
-    miniBatchKMeansVasilakis(training_SIFT_matrix);
+    [bestCentroids, bestCost, timeElapsed] = miniBatchKMeansVN(training_SIFT_matrix);
 
     % Display results
     disp('Best cost:')

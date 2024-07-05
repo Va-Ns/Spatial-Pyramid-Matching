@@ -1,4 +1,4 @@
-function sift_arr = SIFTnormalizationVasilakis(sift_arr)   
+function sift_arr = SIFTnormalizationVN(sift_arr)   
 
     %% Normalization process
     % normalize SIFT descriptors (after Lowe)
@@ -40,9 +40,9 @@ function sift_arr = SIFTnormalizationVasilakis(sift_arr)
     % make it sensitive to changes or noise.
     sift_arr_norm(find(sift_arr_norm > 0.2)) = 0.2;
 
-    % finally, renormalize to unit length
+    % finally, re-normalize to unit length
 
-    % Here we will need to renormalize, because the process of attenuation
+    % Here we will need to re-normalize, because the process of attenuation
     % of large gradients has already taken place. So since the values of the
     % matrix have changed we will have to re-normalize.
     tmp = sqrt(sum(sift_arr_norm.^2, 2));

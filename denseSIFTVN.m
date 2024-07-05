@@ -1,4 +1,4 @@
-function features = denseSIFTVasilakis(inputds,Options)
+function features = denseSIFTVN(inputds,Options)
 
 arguments (Input)
 
@@ -86,7 +86,7 @@ while hasdata(inputds)
 
     % Generate dense gauss (review it)
 
-    [GX,GY] = gaussVasilakis(Options.Sigma_Edge);
+    [GX,GY] = gaussVN(Options.Sigma_Edge);
 
     % Add boundary
     img = [img(2:-1:1,:,:); img; img(end:-1:end-1,:,:)];
@@ -142,8 +142,7 @@ while hasdata(inputds)
         % Calculation of the inner product between the respective
         %histogram angle (of the eight we are searching for) and the
         % orientation of the gradient.
-        tmp = (cosI*cos(angles(a))+sinI*sin(angles(a))).^...
-                                                Options.Angle_Attenuation;
+        tmp = (cosI*cos(angles(a))+sinI*sin(angles(a))).^Options.Angle_Attenuation;
         tmp = tmp .* (tmp > 0);
 
         % weight by magnitude
@@ -339,7 +338,7 @@ while hasdata(inputds)
     [grid_x,grid_y] = meshgrid(grid_x, grid_y);
     [nrows, ncols, cols] = size(sift_arr);
 
-    %% Normalizing the SIFT desriptors
+    %% Normalizing the SIFT descriptors
 
     % Normalize SIFT descriptors slow, good normalization that respects the
     % flat areas
@@ -350,7 +349,7 @@ while hasdata(inputds)
     sift_arr = reshape(sift_arr, [nrows*ncols Options.Angles*Options.numBins* ...
         Options.numBins]);
 
-    sift_arr = SIFTnormalizationVasilakis(sift_arr);  
+    sift_arr = SIFTnormalizationVN(sift_arr);  
 
     % We change the dimensions of the sift_arr table to a-by-b-by-128.
     sift_arr = reshape(sift_arr, [nrows ncols Options.Angles* ...

@@ -44,15 +44,15 @@ for p = pyramidLevels
                 [Trainds,Testds] = splitTheDatastore2(splitDatastore,newlabels);
 
                 %% Generate SIFT descriptors using Dense SIFT.
-                train_features = denseSIFTVasilakis(Trainds,"Grid_Spacing",8);
-                test_features = denseSIFTVasilakis(Testds,"Grid_Spacing",8);
+                train_features = denseSIFTVN(Trainds,"Grid_Spacing",8);
+                test_features = denseSIFTVN(Testds,"Grid_Spacing",8);
 
                 %% Formatting the Dictionary and extracting the SIFT matrices for the sets
                 for k = 1: length(train_features)
                     reset(train_features{k})
                 end
 
-                Dictionary = DictionaryFormationVasilakis(train_features,"Centers",c);
+                Dictionary = DictionaryFormationVN(train_features,"Centers",c);
 
                 %% Histogram Representation of Images
 
@@ -94,17 +94,17 @@ for p = pyramidLevels
                 end
 
                 % Update the SpatialPyramidVasilakis function calls
-                Training_Pyramid_Vectors = SpatialPyramidVasilakis(training_vector_images, ...
+                Training_Pyramid_Vectors = SpatialPyramidVN(training_vector_images, ...
                     train_features,Dictionary,"Levels",p);
 
-                Testing_Pyramid_Vectors = SpatialPyramidVasilakis(testing_vector_images, ...
+                Testing_Pyramid_Vectors = SpatialPyramidVN(testing_vector_images, ...
                     test_features,Dictionary,"Levels",p);
 
 
-                K_train = hist_intersection_Vasilakis(Training_Pyramid_Vectors, ...
+                K_train = hist_intersection_VN(Training_Pyramid_Vectors, ...
                     Training_Pyramid_Vectors);
 
-                K_test = hist_intersection_Vasilakis(Testing_Pyramid_Vectors, ...
+                K_test = hist_intersection_VN(Testing_Pyramid_Vectors, ...
                     Training_Pyramid_Vectors);
 
                 t = templateSVM('SaveSupportVectors',true,'Standardize',true,'Type', ...
