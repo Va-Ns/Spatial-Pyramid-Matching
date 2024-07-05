@@ -1,13 +1,12 @@
-% clear;clc
-% delete(gcp('nocreate'))
-% maxWorkers = maxNumCompThreads;
-% disp("Maximum number of workers: " + maxWorkers);
-% pool=parpool(maxWorkers/2);
-% s = rng("default");
+clear;clc
+delete(gcp('nocreate'))
+maxWorkers = maxNumCompThreads;
+disp("Maximum number of workers: " + maxWorkers);
+pool=parpool(maxWorkers/2);
+s = rng("default");
 
 %% Get images directory and form the imageDatastore
-fileLocation = ['C:\Users\vasil\OneDrive\Υπολογιστής\Github projects\' ...
-    'Spatial Pyramid Matching\scene_categories'];
+fileLocation = 'C:\Users\Nik_Vas\Documents\GitHub\Spatial-Pyramid-Matching\scene_categories';
 datastore = imageDatastore(fileLocation,"IncludeSubfolders",true, ...
     "LabelSource","foldernames");
 
@@ -20,13 +19,13 @@ Models = struct('Model', cell(10, 1));
 
 % Initialize the table
 resultsTable = table('Size', [0 4], 'VariableTypes', {'double', 'double', 'string', 'double'}, ...
-    'VariableNames', {'Pyramid_Levels', 'Number_of_Centers', ...
-    'Optimization_Parameter', 'Mean_Accuracy'});
+                                    'VariableNames', {'Pyramid_Levels', 'Number_of_Centers', ...
+                                                      'Optimization_Parameter','Mean_Accuracy'});
 
 % Define the parameters
 pyramidLevels = [2, 3];
 numCenters = [200, 400];
-hyperparameters = {'BoxConstraint', 'KernelScale', 'All'};
+hyperparameters = {'BoxConstraint', 'KernelScale', 'all'};
 
 % Iterate over the parameters
 for p = pyramidLevels
@@ -111,31 +110,34 @@ for p = pyramidLevels
                                                                                   'classification');
                 % Update the fitcecoc function call based on the hyperparameters
                 
-                switch h
-
-                    case h == 1
-                    
+                if h == 1
+                        
+                        
                         Models(o).Model = fitcecoc(K_train,Trainds.Labels,"Learners",t, ...
                             "Coding", "onevsall",'OptimizeHyperparameters', ...
-                            {hyperparameters{1}}, ...
+                            hyperparameters{1}, ...
                             'HyperparameterOptimizationOptions',struct('KFold',10,'Optimizer', ...
-                            'bayesopt','MaxObjectiveEvaluations',20,'UseParallel',true));
+                            'bayesopt','MaxObjectiveEvaluations',60,'UseParallel',true,'ShowPlots', ...
+                            false,'Verbose', 1));
+                        
+                        
+                elseif h == 2  % BoxConstraint and KernelScale
 
-                    case h == 2  % BoxConstraint and KernelScale
+                        Models(o).Model = fitcecoc(K_train,Trainds.Labels,"Learners",t, ...
+                            "Coding", "onevsall",'OptimizeHyperparameters', ...
+                            {hyperparameters{1},hyperparameters{2}}, ...
+                            'HyperparameterOptimizationOptions',struct('KFold',10,'Optimizer','bayesopt', ...
+                            'MaxObjectiveEvaluations',60,'UseParallel',true,'ShowPlots',false,'Verbose', ...
+                             1));
 
-                    Models(o).Model = fitcecoc(K_train,Trainds.Labels,"Learners",t, ...
-                        "Coding", "onevsall",'OptimizeHyperparameters', ...
-                        {hyperparameters{1},hyperparameters{2}}, ...
-                        'HyperparameterOptimizationOptions',struct('KFold',10,'Optimizer','bayesopt', ...
-                        'MaxObjectiveEvaluations',20,'UseParallel',true));
-
-                    case h == 3  % All hyperparameters
-
-                    Models(o).Model = fitcecoc(K_train,Trainds.Labels,"Learners",t, ...
-                        "Coding", "onevsall",'OptimizeHyperparameters', ...
-                        hyperparameters{3}, ...
-                        'HyperparameterOptimizationOptions',struct('KFold',10,'Optimizer','bayesopt', ...
-                        'MaxObjectiveEvaluations',20,'UseParallel',true));
+                else
+    
+                        Models(o).Model = fitcecoc(K_train,Trainds.Labels,"Learners",t, ...
+                            "Coding", "onevsall",'OptimizeHyperparameters', ...
+                            hyperparameters{3}, ...
+                            'HyperparameterOptimizationOptions',struct('KFold',10,'Optimizer','bayesopt', ...
+                            'MaxObjectiveEvaluations',60,'UseParallel',true,'ShowPlots',false,'Verbose', ...
+                            1));
 
                 end
 
@@ -150,12 +152,32 @@ for p = pyramidLevels
 
             % Compute the mean accuracy and add the results to the table
             Mean_Accuracy = mean(Accuracy);
-            resultsTable = [resultsTable; {p, c, hyperparameters{h}, Mean_Accuracy}]
+            resultsTable = [resultsTable; {p, c, hyperparameters{h}, Mean_Accuracy}];
         end
     end
 end
 
+clc
 
+%% Reformat the table to a nicer view
+
+ind_1 = find(resultsTable.Optimization_Parameter == "KernelScale");
+resultsTable.Optimization_Parameter(ind_1,:) = "BoxConstraint & KernelScale";
+
+ind_2 = find(resultsTable.Optimization_Parameter == "all");
+resultsTable.Optimization_Parameter(ind_2,:) = "All";
+
+resultsTable = renamevars(resultsTable,["Pyramid_Levels","Optimization_Parameter", ...
+    "Number_of_Centers","Mean_Accuracy"],["Pyramid Levels","Optimization Parameter", ...
+    "Number of Centers","Mean Accuracy"]);
+
+fprintf('Saving results... \n')
+FilenameResultsTable = 'resultsTable.mat';
+
+% Create the full file path
+fullFileResultsTable = fullfile(pwd, FilenameResultsTable);
+
+save(fullFileResultsTable,"resultsTable")
 
 
 
