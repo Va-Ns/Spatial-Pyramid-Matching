@@ -1,4 +1,4 @@
-function features = denseSIFTVasilakis(inputds,Options)
+function features = denseSIFTVN(inputds,Options)
 
 arguments (Input)
 
@@ -31,9 +31,8 @@ end
 
 fprintf("Using: \n Angles = %d \n Number of bins = %d \n Angle " + ...
         "attenuation = %d \n Grid Spacing = %d \n Patch size = %d \n" + ...
-        " Sigma edge = %d\n\n",Options.Angles, ...
-        Options.numBins,Options.Angle_Attenuation,Options.Grid_Spacing, ...
-        Options.Patch_Size,Options.Sigma_Edge);
+        " Sigma edge = %d\n\n",Options.Angles,Options.numBins,Options.Angle_Attenuation, ...
+                                        Options.Grid_Spacing,Options.Patch_Size,Options.Sigma_Edge);
 
 i=0;
 
@@ -86,7 +85,7 @@ while hasdata(inputds)
 
     % Generate dense gauss (review it)
 
-    [GX,GY] = gaussVasilakis(Options.Sigma_Edge);
+    [GX,GY] = gaussVN(Options.Sigma_Edge);
 
     % Add boundary
     img = [img(2:-1:1,:,:); img; img(end:-1:end-1,:,:)];
@@ -117,10 +116,8 @@ while hasdata(inputds)
     %% Forming the grid of the overall image.
 
     % grid
-    grid_x = Options.Patch_Size/2:Options.Grid_Spacing:wid-...
-        Options.Patch_Size/2+1;
-    grid_y = Options.Patch_Size/2:Options.Grid_Spacing:hgt-...
-        Options.Patch_Size/2+1;
+    grid_x = Options.Patch_Size/2:Options.Grid_Spacing:wid-Options.Patch_Size/2+1;
+    grid_y = Options.Patch_Size/2:Options.Grid_Spacing:hgt-Options.Patch_Size/2+1;
 
     %% Initialize the size of the orientation image
 
@@ -142,8 +139,7 @@ while hasdata(inputds)
         % Calculation of the inner product between the respective
         %histogram angle (of the eight we are searching for) and the
         % orientation of the gradient.
-        tmp = (cosI*cos(angles(a))+sinI*sin(angles(a))).^...
-                                                Options.Angle_Attenuation;
+        tmp = (cosI*cos(angles(a))+sinI*sin(angles(a))).^Options.Angle_Attenuation;
         tmp = tmp .* (tmp > 0);
 
         % weight by magnitude
@@ -195,8 +191,7 @@ while hasdata(inputds)
 
         % Convolve first by column of each angle channel orientation, with
         % weight_x and then convolve by row with weight_x' in order.
-        I_orientation(:,:,a) = conv2(weight_x, weight_x', ...
-            I_orientation(:,:,a),'same');
+        I_orientation(:,:,a) = conv2(weight_x, weight_x',I_orientation(:,:,a),'same');
         % figure imshow(I_orientation(:,:,a))
     end
 
@@ -313,9 +308,8 @@ while hasdata(inputds)
     % size of the grid we want with the additional dimension of the 128
     % features we want.
 
-    sift_arr=zeros([length(grid_y) length(grid_x) Options.Angles* ...
-        Options.numBins*Options.numBins], ...
-        'single');
+    sift_arr=zeros([length(grid_y) length(grid_x) Options.Angles*Options.numBins*Options.numBins], ...
+                                                                                          'single');
     b = 0;
 
     % The initialization of the loop is done in such a way that it runs for
@@ -328,8 +322,7 @@ while hasdata(inputds)
         % respective grid points and at the given coordinates we get the
         % orientation of the corners from the third dimension of the
         % orientation image matrix.
-        sift_arr(:,:,b+1:b+Options.Angles) = I_orientation(grid_y+ ...
-            sample_y(n), grid_x+sample_x(n), :);
+        sift_arr(:,:,b+1:b+Options.Angles) = I_orientation(grid_y+sample_y(n), grid_x+sample_x(n),:);
         b = b+Options.Angles;
     end
     clear I_orientation
@@ -339,7 +332,7 @@ while hasdata(inputds)
     [grid_x,grid_y] = meshgrid(grid_x, grid_y);
     [nrows, ncols, cols] = size(sift_arr);
 
-    %% Normalizing the SIFT desriptors
+    %% Normalizing the SIFT descriptors
 
     % Normalize SIFT descriptors slow, good normalization that respects the
     % flat areas
@@ -347,14 +340,12 @@ while hasdata(inputds)
     % We form a global matrix, where the first dimension is the product of
     % the image grid dimensions and the second dimension is the number of
     % features.
-    sift_arr = reshape(sift_arr, [nrows*ncols Options.Angles*Options.numBins* ...
-        Options.numBins]);
+    sift_arr = reshape(sift_arr, [nrows*ncols Options.Angles*Options.numBins*Options.numBins]);
 
-    sift_arr = SIFTnormalizationVasilakis(sift_arr);  
+    sift_arr = SIFTnormalizationVN(sift_arr);  
 
     % We change the dimensions of the sift_arr table to a-by-b-by-128.
-    sift_arr = reshape(sift_arr, [nrows ncols Options.Angles* ...
-                                  Options.numBins*Options.numBins]);
+    sift_arr = reshape(sift_arr, [nrows ncols Options.Angles*Options.numBins*Options.numBins]);
 
     % slow bad normalization that does not respect the flat areas ct = .1;
     % sift_arr = sift_arr + ct; tmp = sqrt(sum(sift_arr.^2, 3)); sift_arr =
@@ -362,8 +353,7 @@ while hasdata(inputds)
 
     % Transform the siftArr matrix from a-by-b-by-128 into a*b-by-128
     % dimensions
-    sift_arr = reshape(sift_arr, ...
-        [size(sift_arr,1)*size(sift_arr,2) size(sift_arr,3)]);
+    sift_arr = reshape(sift_arr,[size(sift_arr,1)*size(sift_arr,2) size(sift_arr,3)]);
     
     features.data = sift_arr;
     features.x = grid_x(:);% + params.patchSize/2 - 0.5;

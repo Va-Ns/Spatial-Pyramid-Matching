@@ -1,5 +1,4 @@
-function Pyramid_Vectors = SpatialPyramidVasilakis(input_vector_images, ...
-    input_features,Dictionary,Options)
+function Pyramid_Vectors = SpatialPyramidVN(input_vector_images,input_features,Dictionary,Options)
 
 arguments
 
@@ -44,12 +43,11 @@ for f = 1:length(input_vector_images)
                              (to_read.y > y_lo) & (to_read.y <= y_hi));
             
             % make histogram of features in bin
-            pyramid_cell{1}(i,j,:) = hist(img_patch, ...
-                1:size(Dictionary,1))./length(img);
+            pyramid_cell{1}(i,j,:) = hist(img_patch,1:size(Dictionary,1))./length(img);
         end
     end
 
-    %% compute histograms at the coarser levels
+    %% Compute histograms at the coarser levels
     num_bins = binsHigh/2;
     for l = 2:Options.Levels
         pyramid_cell{l} = zeros(num_bins, num_bins, size(Dictionary,1));

@@ -1,4 +1,4 @@
-function K = hist_intersection_Vasilakis(x1, x2)
+function K = hist_intersection_VN(x1, x2)
 
 n = size(x2,1);
 m = size(x1,1);
