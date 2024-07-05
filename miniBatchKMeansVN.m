@@ -1,5 +1,4 @@
-function [bestCentroids, bestCost, timeElapsed] = miniBatchKMeansVN(data, ...
-    Options)
+function [bestCentroids, bestCost, timeElapsed] = miniBatchKMeansVN(data,Options)
     
 
 arguments 
@@ -8,11 +7,9 @@ arguments
 
     Options.numClusters        {mustBePositive,mustBeInteger} = 200
 
-    Options.maxIter            {mustBeInteger,...
-                                mustBeInRange(Options.maxIter,1,1e9)} = 50
+    Options.maxIter            {mustBeInteger,mustBeInRange(Options.maxIter,1,1e9)} = 50
 
-    Options.replicates         {mustBeInteger,...
-                                mustBeInRange(Options.replicates,1,1e9)} = 10
+    Options.replicates         {mustBeInteger,mustBeInRange(Options.replicates,1,1e9)} = 10
 
     Options.batchSize          {mustBeInteger,mustBePositive} = 1000
 
@@ -24,8 +21,7 @@ end
     numClusters = Options.numClusters;
 
     fprintf("Using: \n\n Batch Size = %d \n\n maxIter =%d \n\n " + ...
-            "Replicates =%d \n\n numClusters = %d\n\n", ...
-            batchSize,maxIter,replicates,numClusters);
+            "Replicates =%d \n\n numClusters = %d\n\n",batchSize,maxIter,replicates,numClusters);
 
     % Ensure data is in single precision (float32)
     dataGPU = gpuArray(single(data));
@@ -41,8 +37,7 @@ end
     shuffledData = dataGPU(randperm(size(data, 1)), :);
 
     % Initialize centroids using kmeans++
-    currentCentroids = datasample(shuffledData, numClusters, ...
-        'Replace', false);
+    currentCentroids = datasample(shuffledData, numClusters,'Replace', false);
 
     % Perform mini-batch k-means
     for replicate = 1:replicates
@@ -54,8 +49,7 @@ end
             miniBatch = shuffledData(startIdx:endIdx, :);
 
             % Update centroids using the mini-batch
-            [~, currentCentroids] = kmeans(miniBatch, numClusters, 'Start', ...
-                                           currentCentroids);
+            [~, currentCentroids] = kmeans(miniBatch, numClusters, 'Start',currentCentroids);
 
             fprintf("---------------------------------------------------\n" + ...
                     "Now in Replicate: %d | Iteration: %d\n" + ...
@@ -65,8 +59,8 @@ end
         
         
         % Calculate cost for the final centroids
-        [~, ~, sumd] = kmeans(dataGPU, numClusters, 'Start', ...
-            currentCentroids,"MaxIter",10,"Display","iter");
+        [~, ~, sumd] = kmeans(dataGPU, numClusters, 'Start',currentCentroids,"MaxIter",10,"Display", ...
+                                                                                            "iter");
         
         totalCost = sum(sumd);
 

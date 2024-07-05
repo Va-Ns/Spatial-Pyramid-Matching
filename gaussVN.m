@@ -12,7 +12,7 @@ function [GX,GY] = gaussVN(sigma)
         
         else
            
-            % anisotropic gaussian
+            % Anisotropic Gaussian
             f_wid_x = 2 * ceil(sigma(1)) + 1;
             f_wid_y = 2 * ceil(sigma(2)) + 1;
             G_x = normpdf(-f_wid_x:f_wid_x,0,sigma(1));
