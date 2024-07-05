@@ -109,22 +109,30 @@ for p = pyramidLevels
                 t = templateSVM('SaveSupportVectors',true,'Standardize',true,'Type', ...
                                                                                   'classification');
                 % Update the fitcecoc function call based on the hyperparameters
-                
+                %%
                 % Create a directory for storing figures
-                outputDir = 'figures';
-                if ~exist(outputDir, 'dir')
+                outputDir = 'Figures';
+                if ~isfolder(outputDir)
                     mkdir(outputDir);
                 end
                 
                 if h == 1
+
                     Models(o).Model = fitcecoc(K_train, Trainds.Labels, "Learners", t, ...
                         "Coding", "onevsall", 'OptimizeHyperparameters', ...
                         hyperparameters{1}, ...
                         'HyperparameterOptimizationOptions', struct('KFold', 10, 'Optimizer', ...
-                        'bayesopt', 'MaxObjectiveEvaluations', 60, 'UseParallel'));
-                    
+                        'bayesopt', 'MaxObjectiveEvaluations', 60, 'UseParallel',true));
+                
                     % Save and close figures
-                    savefig(fullfile(outputDir, sprintf('figure_%d_HypOpt_%s.fig', o, hyperparameters{1})));
+                    figHandles = findall(groot, 'Type', 'figure');
+                    for i = 1:length(figHandles)
+                        if i == 1
+                            savefig(figHandles(i), fullfile(outputDir, sprintf('figure_%d_HypOpt_%s_MinObj.fig', o, hyperparameters{1})));
+                        elseif i == 2
+                            savefig(figHandles(i), fullfile(outputDir, sprintf('figure_%d_HypOpt_%s_ObjModel.fig', o, hyperparameters{1})));
+                        end
+                    end
                     close all;
                     
                 elseif h == 2  % BoxConstraint and KernelScale
@@ -135,8 +143,14 @@ for p = pyramidLevels
                         'MaxObjectiveEvaluations', 60, 'UseParallel', true));
                     
                     % Save and close figures
-                    savefig(fullfile(outputDir, sprintf('figure_%d_HypOpt_%s.fig', o, hyperparameters{1})));
-                    savefig(fullfile(outputDir, sprintf('figure_%d_HypOpt_%s.fig', o, hyperparameters{2})));
+                    figHandles = findall(groot, 'Type', 'figure');
+                    for i = 1:length(figHandles)
+                        if i == 1
+                            savefig(figHandles(i), fullfile(outputDir, sprintf('figure_%d_HypOpt_%s_MinObj.fig', o, hyperparameters{1})));
+                        elseif i == 2
+                            savefig(figHandles(i), fullfile(outputDir, sprintf('figure_%d_HypOpt_%s_ObjModel.fig', o, hyperparameters{1})));
+                        end
+                    end
                     close all;
                     
                 else
@@ -147,7 +161,14 @@ for p = pyramidLevels
                         'MaxObjectiveEvaluations', 60, 'UseParallel', true));
                     
                     % Save and close figures
-                    savefig(fullfile(outputDir, sprintf('figure_%d_HypOpt_%s.fig', o, hyperparameters{3})));
+                    figHandles = findall(groot, 'Type', 'figure');
+                    for i = 1:length(figHandles)
+                        if i == 1
+                            savefig(figHandles(i), fullfile(outputDir, sprintf('figure_%d_HypOpt_%s_MinObj.fig', o, hyperparameters{1})));
+                        elseif i == 2
+                            savefig(figHandles(i), fullfile(outputDir, sprintf('figure_%d_HypOpt_%s_ObjModel.fig', o, hyperparameters{1})));
+                        end
+                    end
                     close all;
                 end
 
@@ -188,9 +209,3 @@ FilenameResultsTable = 'resultsTable.mat';
 fullFileResultsTable = fullfile(pwd, FilenameResultsTable);
 
 save(fullFileResultsTable,"resultsTable")
-
-
-
-
-
-
