@@ -1,5 +1,32 @@
 function features = denseSIFTVN(inputds,Options)
 
+% This function extracts dense SIFT (Scale-Invariant Feature Transform) features from a set of images 
+% provided in an ImageDatastore. The function processes each image by resizing it to a common size, 
+% converting it to grayscale, normalizing it, and then computing gradient magnitudes and orientations.
+% The gradients are used to form orientation histograms over a grid of patches, which are then weighted 
+% and sampled to produce the final feature descriptors.
+%
+% INPUT:
+%   inputds - An ImageDatastore containing the images to process.
+%   Options - A structure containing the following optional parameters:
+%       Angles (default: 8) - Number of orientation bins.
+%       numBins (default: 4) - Number of spatial bins.
+%       Angle_Attenuation (default: 9) - Attenuation factor for angle alignment.
+%       Grid_Spacing (default: 4) - Spacing between grid points.
+%       Patch_Size (default: 16) - Size of each patch.
+%       Sigma_Edge (default: 1) - Standard deviation for Gaussian filter.
+%
+% OUTPUT:
+%   features - A matrix containing the extracted SIFT features for each image.
+%
+% The function performs the following steps:
+% 1. Reads and resizes each image to a common size.
+% 2. Converts the image to grayscale and normalizes it.
+% 3. Computes gradient magnitudes and orientations.
+% 4. Forms orientation histograms over a grid of patches.
+% 5. Applies spatial weighting to each orientation channel.
+% 6. Samples SIFT bins at valid locations to produce the final feature descriptors.
+
 arguments (Input)
 
     inputds          {mustBeUnderlyingType(inputds, ...

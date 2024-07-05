@@ -1,5 +1,23 @@
 function sift_arr = SIFTnormalizationVN(sift_arr)   
 
+    % This function normalizes SIFT descriptors to ensure they are robust to changes in illumination 
+    % and contrast. The normalization process follows the method proposed by David Lowe.
+    %
+    % INPUT:
+    %   sift_arr - A matrix where each row represents a SIFT descriptor.
+    %
+    % OUTPUT:
+    %   sift_arr - The normalized SIFT descriptors.
+    %
+    % The function performs the following steps:
+    % 1. Computes the L2 norm of each SIFT descriptor.
+    % 2. Identifies descriptors with norms greater than 1.
+    % 3. Normalizes these descriptors to have a unit norm.
+    % 4. Suppresses large gradients by capping descriptor values at 0.2.
+    % 5. Re-normalizes the descriptors to unit length after suppression.
+    % 6. Updates the original SIFT descriptor matrix with the normalized values.
+
+
     %% Normalization process
     % normalize SIFT descriptors (after Lowe)
 

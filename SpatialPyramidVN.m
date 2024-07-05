@@ -1,5 +1,30 @@
 function Pyramid_Vectors = SpatialPyramidVN(input_vector_images,input_features,Dictionary,Options)
 
+    % This function computes spatial pyramid matching vectors for a set of images using a given 
+    % dictionary of visual words. The spatial pyramid representation captures spatial information 
+    % by partitioning the image into increasingly finer sub-regions and computing histograms of 
+    % local features found inside each sub-region.
+    %
+    % INPUT:
+    %   input_vector_images - A cell array where each cell contains an image represented as a matrix.
+    %   input_features - A cell array where each cell contains the features of the corresponding image.
+    %   Dictionary - A matrix where each row represents a visual word.
+    %   Options - A structure containing the following optional parameters:
+    %       Levels (default: 3) - Number of levels in the spatial pyramid.
+    %
+    % OUTPUT:
+    %   Pyramid_Vectors - A matrix where each row represents the spatial pyramid matching vector 
+    %                     for the corresponding image.
+    %
+    % The function performs the following steps:
+    % 1. Initializes the parameters and preallocates the output matrix.
+    % 2. Iterates over each image to compute its spatial pyramid representation:
+    %    a. Divides the image into bins at the finest level.
+    %    b. Computes histograms of features within each bin.
+    %    c. Aggregates histograms at coarser levels by summing adjacent bins.
+    % 3. Stacks and weights the histograms from all levels to form the final pyramid vector.
+    % 4. Stores the pyramid vector for each image in the output matrix.
+
 arguments
 
     input_vector_images            {mustBeNonempty}

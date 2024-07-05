@@ -1,6 +1,31 @@
 function [bestCentroids, bestCost, timeElapsed] = miniBatchKMeansVN(data,Options)
     
-
+% This function performs mini-batch K-means clustering on a given dataset using specified options.
+% It initializes centroids using the k-means++ algorithm and iteratively updates them using mini-batches
+% of the data. The function supports multiple replicates to find the best clustering solution.
+%
+% INPUT:
+%   data - A matrix where each row represents a data point.
+%   Options - A structure containing the following optional parameters:
+%       numClusters (default: 200) - Number of clusters.
+%       maxIter (default: 50) - Maximum number of iterations for each replicate.
+%       replicates (default: 10) - Number of replicates to run.
+%       batchSize (default: 1000) - Size of each mini-batch.
+%
+% OUTPUT:
+%   bestCentroids - The centroids of the best clustering solution found.
+%   bestCost - The cost (sum of squared distances) of the best clustering solution.
+%   timeElapsed - The time elapsed during the clustering process.
+%
+% The function performs the following steps:
+% 1. Parses and validates input arguments.
+% 2. Converts the data to single precision and moves it to the GPU.
+% 3. Initializes centroids using the k-means++ algorithm.
+% 4. Randomly shuffles the data.
+% 5. Iteratively updates centroids using mini-batches of the data.
+% 6. Computes the cost for the final centroids of each replicate.
+% 7. Selects the best centroids based on the lowest cost.
+% 8. Returns the best centroids, the best cost, and the time elapsed.
 arguments 
     
     data                       {mustBeNonempty}

@@ -1,5 +1,26 @@
 function [Dictionary] =DictionaryFormationVN(train_features,Options)
 
+% This function forms a dictionary of visual words using K-means clustering on SIFT descriptors 
+% extracted from a set of training images. The function takes in a cell array of training features 
+% and an options structure specifying the number of cluster centers.
+%
+% INPUT:
+%   train_features - A cell array containing the SIFT descriptors for each training image.
+%   Options - A structure containing the following optional parameters:
+%       Centers (default: 200) - Number of cluster centers for K-means.
+%
+% OUTPUT:
+%   Dictionary - A matrix containing the cluster centers (visual words) formed by K-means.
+%
+% The function performs the following steps:
+% 1. Preallocates the dictionary matrix based on the number of centers.
+% 2. Initializes an empty matrix to collect all SIFT descriptors from the training images.
+% 3. Reads and concatenates SIFT descriptors from each training image into a single matrix.
+% 4. Validates that the number of centers does not exceed the number of keypoints.
+% 5. Applies mini-batch K-means clustering to the concatenated SIFT descriptors.
+% 6. Displays the best cost and elapsed time for the clustering process.
+% 7. Returns the cluster centers as the dictionary of visual words.
+
     arguments (Input)
 
     train_features          {mustBeA(train_features,"cell")}
