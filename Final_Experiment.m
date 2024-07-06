@@ -24,7 +24,7 @@ resultsTable = table('Size', [0 4], 'VariableTypes', {'double', 'double', 'strin
                                                       'Optimization_Parameter','Mean_Accuracy'});
 
 % Define the parameters
-pyramidLevels = [2, 3];
+pyramidLevels = [2, 3, 4];
 numCenters = [200, 400];
 hyperparameters = {'BoxConstraint', 'KernelScale', 'all'};
 
