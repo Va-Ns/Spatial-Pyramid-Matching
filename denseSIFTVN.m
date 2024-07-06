@@ -186,7 +186,7 @@ while hasdata(inputds)
     % patch (here 16-by-16)
     weight_kernel = zeros(Options.Patch_Size,Options.Patch_Size);
 
-    % Calculation of the patch centre.
+    % Calculation of the patch center.
 
     r = Options.Patch_Size/2; % Here the radius of the patch is
     % calculated, which is half the size of the patch.
@@ -250,10 +250,9 @@ while hasdata(inputds)
     %            | 17	17  17	17	17 |
 
     [sample_x, sample_y] = meshgrid(linspace(1,Options.Patch_Size+1,Options.numBins+1));
-    %                                          ^^^^^^^^^^^^ ^^^^^^^^^^
-    % Γιατί patch_size+1 και num_bins+1; Γιατί με τον τρόπο αυτό
-    % εξασφαλίζουμε ότι το πλέγμα που δουλεύουμε θα έχει πάντοτε την σωστή
-    % μορφή, είτε αυτή είναι άρτια (π.χ 4-by-4) είτε περιττή (π.χ 5-by-5).
+    %                                          ^^^^^^^^^^^^ ^^^^^^^
+    % Why patch_size+1 and num_bins+1? This way we ensure that the mesh we are working with 
+    % will always have the correct form, whether it is even (e.g. 4-by-4) or odd (e.g. 5-by-5).
 
     sample_x = sample_x(1:Options.numBins,1:Options.numBins);
     sample_x = sample_x(:)-Options.Patch_Size/2; % We convert the

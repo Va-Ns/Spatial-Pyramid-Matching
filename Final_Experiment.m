@@ -6,6 +6,8 @@ pool=parpool(maxWorkers/2);
 s = rng("default");
 
 %% Get images directory and form the imageDatastore
+
+% Select the place where you have the scene category folder
 fileLocation = uigetdir();
 datastore = imageDatastore(fileLocation,"IncludeSubfolders",true, "LabelSource","foldernames");
 

@@ -50,7 +50,7 @@ function sift_arr = SIFTnormalizationVN(sift_arr)
     %                                second dimension of the variable
     %                                sift_arr.
 
-    % suppress large gradients
+    % Suppress large gradients
 
     % We suppress large gradients. The reason why we do this is to reduce
     % the influence of high contrast on the image, such as edges. This is

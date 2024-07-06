@@ -91,17 +91,17 @@ for f = 1:length(input_vector_images)
     %% stack all the histograms with appropriate weights
     pyramid = [];
     
-    % Στάθμιση των coarser επιπέδων
+    % Weight the coarser levels
     for l = 1:Options.Levels-1
         pyramid = [pyramid pyramid_cell{l}(:)' .* 2^(-l)];
     end
 
-    % Στάθμιση των finer επιπέδων
+    % Weight the finer levels
     pyramid = [pyramid pyramid_cell{Options.Levels}(:)'... 
         .* 2^(1-Options.Levels)];
 
-    % Στο σημείο αυτό τοποθετείται στην εκάστοτε σειρά το διάνυσμα της 
-    % εικόνας που έχει παραχθεί από την πυραμίδα της εκάστοτε εικόνας 
+    % At this point the vector of the image produced by the pyramid of the image in question is 
+    % placed in the respective row  
     pyramid_all(f,:) = pyramid;
 
 
