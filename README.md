@@ -55,7 +55,7 @@ Following the notion of the authors, this code is for teaching/research purposes
 
 *Progression of the loss function for optimizing one of the hyperparameters of the SVM*
 
-** Table 
+## Table 
 
 | Pyramid Levels | Number of Centers | Optimization Parameter         | Mean Accuracy         |
 |----------------|-------------------|--------------------------------|-----------------------|
