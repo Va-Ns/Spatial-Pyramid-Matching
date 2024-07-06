@@ -28,11 +28,13 @@ function Pyramid_Vectors = SpatialPyramidVN(input_vector_images, input_features,
         input_vector_images            {mustBeNonempty}
         input_features                 {mustBeA(input_features,"cell")}
         Dictionary                     {mustBeUnderlyingType(Dictionary, 'single')}
-        Options.Levels                 {mustBePositive, mustBeInteger, mustBeInRange(Options.Levels, 1, 3)} = 3
+        Options.Levels                 {mustBePositive, mustBeInteger, mustBeInRange(Options.Levels, ...
+                                                                                         1, 3)} = 3
     end
 
     binsHigh = 2^(Options.Levels-1);
-    pyramid_all = zeros(length(input_vector_images), size(Dictionary, 1) * sum((2.^(0:(Options.Levels-1))).^2), 'gpuArray');
+    pyramid_all = zeros(length(input_vector_images), size(Dictionary, 1) * ...
+                                                   sum((2.^(0:(Options.Levels-1))).^2), 'gpuArray');
 
     for f = 1:length(input_vector_images)
         img = gpuArray(input_vector_images{f});
@@ -52,8 +54,10 @@ function Pyramid_Vectors = SpatialPyramidVN(input_vector_images, input_features,
                 y_lo = y_bins(j) + 1;
                 y_hi = y_bins(j+1);
 
-                img_patch = img((to_read.x > x_lo) & (to_read.x <= x_hi) & (to_read.y > y_lo) & (to_read.y <= y_hi));
-                pyramid_cell{1}(i, j, :) = histcounts(img_patch, 1:size(Dictionary, 1)+1, 'Normalization', 'probability');
+                img_patch = img((to_read.x > x_lo) & (to_read.x <= x_hi) & (to_read.y > y_lo) & ...
+                                                                               (to_read.y <= y_hi));
+                pyramid_cell{1}(i, j, :) = histcounts(img_patch, 1:size(Dictionary, 1)+1, ...
+                                                                    'Normalization', 'probability');
             end
         end
 
