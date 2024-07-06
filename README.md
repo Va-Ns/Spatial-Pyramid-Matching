@@ -9,9 +9,10 @@ This project is inspired by the code snippets available from Svetlana [Lazebnik 
 
 ![image](https://github.com/Va-Ns/Spatial-Pyramid-Matching/assets/68824495/0bef13bb-69fe-4ce3-88fb-eb535ca6a065)
 
-*Progression of the loss function for optimizing one of the hyperparameters of the SVM*
+            *Progression of the loss function for optimizing one of the hyperparameters of the SVM*
 
 ![mermaid-diagram-2024-07-06-235543](https://github.com/Va-Ns/Spatial-Pyramid-Matching/assets/68824495/64712b1b-7c99-4b34-b7f7-635428baeba7)
+
 *Code diagram of the script*
 
 ## Project Structure
