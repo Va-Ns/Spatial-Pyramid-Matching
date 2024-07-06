@@ -49,4 +49,5 @@ Following the notion of the authors, this code is for teaching/research purposes
 
 
 ![image](https://github.com/Va-Ns/Spatial-Pyramid-Matching/assets/68824495/7240d098-e4f0-481e-96f7-4f028e90fe81)
+
 *image_1*
