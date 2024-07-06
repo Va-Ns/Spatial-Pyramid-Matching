@@ -21,9 +21,9 @@ This repository contains MATLAB code for performing spatial pyramid matching on 
 To run this project:
 1. Ensure MATLAB is installed on your system.
 2. Clone this repository to your local machine.
-3. Place your dataset in the [`scene_categories/`](command:_github.copilot.openRelativePath?%5B%7B%22scheme%22%3A%22file%22%2C%22authority%22%3A%22%22%2C%22path%22%3A%22%2Fc%3A%2FUsers%2Fvasil%2FOneDrive%2F%CE%A5%CF%80%CE%BF%CE%BB%CE%BF%CE%B3%CE%B9%CF%83%CF%84%CE%AE%CF%82%2FGithub%20projects%2FSpatial%20Pyramid%20Matching%2Fscene_categories%2F%22%2C%22query%22%3A%22%22%2C%22fragment%22%3A%22%22%7D%5D "c:\Users\vasil\OneDrive\Υπολογιστής\Github projects\Spatial Pyramid Matching\scene_categories\") directory.
+3. Place your dataset in the `scene_categories/`directory.
 4. Open MATLAB and navigate to the cloned project directory.
-5. Run the [`Final_Experiment.m`](command:_github.copilot.openRelativePath?%5B%7B%22scheme%22%3A%22file%22%2C%22authority%22%3A%22%22%2C%22path%22%3A%22%2Fc%3A%2FUsers%2Fvasil%2FOneDrive%2F%CE%A5%CF%80%CE%BF%CE%BB%CE%BF%CE%B3%CE%B9%CF%83%CF%84%CE%AE%CF%82%2FGithub%20projects%2FSpatial%20Pyramid%20Matching%2FFinal_Experiment.m%22%2C%22query%22%3A%22%22%2C%22fragment%22%3A%22%22%7D%5D "c:\Users\vasil\OneDrive\Υπολογιστής\Github projects\Spatial Pyramid Matching\Final_Experiment.m") script to start the image classification pipeline.
+5. Run the `Final_Experiment.m` script to start the image classification pipeline.
 
 ```matlab
 run('Final_Experiment.m')
