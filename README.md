@@ -55,3 +55,19 @@ Following the notion of the authors, this code is for teaching/research purposes
 
 *Progression of the loss function for optimizing one of the hyperparameters of the SVM*
 
+** Table 
+
+| Pyramid Levels | Number of Centers | Optimization Parameter         | Mean Accuracy         |
+|----------------|-------------------|--------------------------------|-----------------------|
+| 2              | 200               | BoxConstraint                  | 71.7507418397626      |
+| 2              | 200               | BoxConstraint & KernelScale    | 71.3946587537092      |
+| 2              | 200               | All                            | 71.6320474777448      |
+| 2              | 400               | BoxConstraint                  | 71.6023738872404      |
+| 2              | 400               | BoxConstraint & KernelScale    | 71.8397626112760      |
+| 2              | 400               | All                            | 70.5934718100890      |
+| 3              | 200               | BoxConstraint                  | 76.0237388724036      |
+| 3              | 200               | BoxConstraint & KernelScale    | 75.1335311572700      |
+| 3              | 200               | All                            | 76.0534124629080      |
+| 3              | 400               | BoxConstraint                  | 74.6587537091988      |
+| 3              | 400               | BoxConstraint & KernelScale    | 75.9050445103858      |
+| 3              | 400               | All                            | **76.9139465875371**  |
