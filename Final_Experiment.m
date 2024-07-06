@@ -6,9 +6,8 @@ pool=parpool(maxWorkers/2);
 s = rng("default");
 
 %% Get images directory and form the imageDatastore
-fileLocation = 'C:\Users\Nik_Vas\Documents\GitHub\Spatial-Pyramid-Matching\scene_categories';
-datastore = imageDatastore(fileLocation,"IncludeSubfolders",true, ...
-    "LabelSource","foldernames");
+fileLocation = uigetdir();
+datastore = imageDatastore(fileLocation,"IncludeSubfolders",true, "LabelSource","foldernames");
 
 initialLabels = countEachLabel(datastore);
 
