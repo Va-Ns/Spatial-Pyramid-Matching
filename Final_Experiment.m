@@ -109,12 +109,6 @@ for p = pyramidLevels
                 t = templateSVM('SaveSupportVectors',true,'Standardize',true,'Type', ...
                                                                                   'classification');
                 % Update the fitcecoc function call based on the hyperparameters
-                %%
-                % Create a directory for storing figures
-                outputDir = 'Figures';
-                if ~isfolder(outputDir)
-                    mkdir(outputDir);
-                end
                 
                 if h == 1
 
@@ -123,37 +117,13 @@ for p = pyramidLevels
                         hyperparameters{1}, ...
                         'HyperparameterOptimizationOptions', struct('KFold', 10, 'Optimizer', ...
                         'bayesopt', 'MaxObjectiveEvaluations', 60, 'UseParallel',true));
-                
-                    % Save and close figures
-                    figHandles = findall(groot, 'Type', 'figure');
-                    for i = 1:length(figHandles)
-                        if i == 1
-                            savefig(figHandles(i), fullfile(outputDir, sprintf('figure_%d_HypOpt_%s_MinObj.fig', o, hyperparameters{1})));
-                        elseif i == 2
-                            savefig(figHandles(i), fullfile(outputDir, sprintf('figure_%d_HypOpt_%s_ObjModel.fig', o, hyperparameters{1})));
-                        end
-                    end
-                    close all;
                     
                 elseif h == 2  % BoxConstraint and KernelScale
                     Models(o).Model = fitcecoc(K_train, Trainds.Labels, "Learners", t, ...
                         "Coding", "onevsall", 'OptimizeHyperparameters', ...
                         {hyperparameters{1}, hyperparameters{2}}, ...
                         'HyperparameterOptimizationOptions', struct('KFold', 10, 'Optimizer', ...
-                        'bayesopt', 'MaxObjectiveEvaluations', 60, 'UseParallel', true));
-                    
-                    % Save and close figures
-                    figHandles = findall(groot, 'Type', 'figure');
-                    for i = 1:length(figHandles)
-                        if i == 1
-                            savefig(figHandles(i), fullfile(outputDir, ...
-                                sprintf('figure_%d_HypOpt_%s_MinObj.fig', o,'Box&Kernel')));
-                        elseif i == 2
-                            savefig(figHandles(i), fullfile(outputDir, ...
-                                sprintf('figure_%d_HypOpt_%s_ObjModel.fig', o,'Box&Kernel')));
-                        end
-                    end
-                    close all;
+                        'bayesopt', 'MaxObjectiveEvaluations', 60, 'UseParallel', true)); 
                     
                 else
                     Models(o).Model = fitcecoc(K_train, Trainds.Labels, "Learners", t, ...
@@ -161,19 +131,6 @@ for p = pyramidLevels
                         hyperparameters{3}, ...
                         'HyperparameterOptimizationOptions', struct('KFold', 10, 'Optimizer', ...
                         'bayesopt','MaxObjectiveEvaluations', 60, 'UseParallel', true));
-                    
-                    % Save and close figures
-                    figHandles = findall(groot, 'Type', 'figure');
-                    for i = 1:length(figHandles)
-                        if i == 1
-                            savefig(figHandles(i), fullfile(outputDir, ...
-                                sprintf('figure_%d_HypOpt_%s_MinObj.fig', o,'All')));
-                        elseif i == 2
-                            savefig(figHandles(i), fullfile(outputDir, ...
-                                sprintf('figure_%d_HypOpt_%s_ObjModel.fig', o,'All')));
-                        end
-                    end
-                    close all;
                 end
 
                 [predictedLabels, scores]= predict(Models(o).Model,K_test);
@@ -203,8 +160,9 @@ ind_2 = find(resultsTable.Optimization_Parameter == "all");
 resultsTable.Optimization_Parameter(ind_2,:) = "All";
 
 resultsTable = renamevars(resultsTable,["Pyramid_Levels","Optimization_Parameter", ...
-    "Number_of_Centers","Mean_Accuracy"],["Pyramid Levels","Optimization Parameter", ...
-    "Number of Centers","Mean Accuracy"]);
+                                        "Number_of_Centers","Mean_Accuracy"], ...
+                                       ["Pyramid Levels","Optimization Parameter", ...
+                                        "Number of Centers","Mean Accuracy"]);
 
 fprintf('Saving results... \n')
 FilenameResultsTable = 'resultsTable.mat';
