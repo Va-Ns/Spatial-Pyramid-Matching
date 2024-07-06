@@ -1,6 +1,17 @@
-# Spatial Pyramid Matching Project
+# Image Classification using the Spatial Pyramid Matching scheme in MATLAB
 
-This repository contains MATLAB code for performing spatial pyramid matching on a dataset of scene categories. The project includes various scripts for feature extraction, dictionary formation, and classification using support vector machines (SVM).
+This project is inspired by the code snippets available from Svetlana [Lazebnik et al.](https://slazebni.cs.illinois.edu/) that implement the Spatial Pyramid Matching scheme 
+
+![mermaid-diagram-2024-07-06-235543](https://github.com/Va-Ns/Spatial-Pyramid-Matching/assets/68824495/64712b1b-7c99-4b34-b7f7-635428baeba7)
+
+![image](https://github.com/Va-Ns/Spatial-Pyramid-Matching/assets/68824495/5e44a75d-d6c9-4907-a38d-e485f052d947)
+
+*Progression of the loss function for optimizing some of the hyperparameters of the SVM*
+
+![image](https://github.com/Va-Ns/Spatial-Pyramid-Matching/assets/68824495/0bef13bb-69fe-4ce3-88fb-eb535ca6a065)
+
+*Progression of the loss function for optimizing one of the hyperparameters of the SVM*
+
 
 ## Project Structure
 
@@ -31,23 +42,11 @@ run('Final_Experiment.m')
 
 ## Disclaimer
 
-This repository is a simple form of reproduction with quite a few changes compared to the initial files that are provided in the ICCV. In keeping with that theme, one can identify files, such as `denseSIFTVN.m`, `DictionaryFormationVN.m`, that belong in the initial draft of the contributors yet are important for the completion of this work. All acknowledgements for those files go to the authors!
+This repository is a simple form of reproduction with a few changes compared to the initial files that are provided.  In keeping with that theme, one can identify the use of GPU accelaration and Parallel processing to minimize the experiment's time to completion. Yet, there exist comments and parts inside some code snippets that belong in the initial draft of the contributors as the latter are provided in the [link](https://slazebni.cs.illinois.edu/). All acknowledgements for those parts go to the authors!
 
 ## License
 
 Following the notion of the authors, this code is for teaching/research purposes only.
-
-## Images 
-
-![mermaid-diagram-2024-07-06-235543](https://github.com/Va-Ns/Spatial-Pyramid-Matching/assets/68824495/64712b1b-7c99-4b34-b7f7-635428baeba7)
-
-![image](https://github.com/Va-Ns/Spatial-Pyramid-Matching/assets/68824495/5e44a75d-d6c9-4907-a38d-e485f052d947)
-
-*Progression of the loss function for optimizing some of the hyperparameters of the SVM*
-
-![image](https://github.com/Va-Ns/Spatial-Pyramid-Matching/assets/68824495/0bef13bb-69fe-4ce3-88fb-eb535ca6a065)
-
-*Progression of the loss function for optimizing one of the hyperparameters of the SVM*
 
 ## Table of results
 
