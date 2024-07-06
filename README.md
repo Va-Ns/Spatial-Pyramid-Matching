@@ -42,3 +42,8 @@ This repository is a simple form of reproduction with quite a few changes compar
 ## License
 
 Following the notion of the authors, this code is for teaching/research purposes only.
+
+## Images 
+
+![image](https://github.com/Va-Ns/Spatial-Pyramid-Matching/assets/68824495/0a42a4ea-6f4e-407f-8e83-a8abdae4ce9c)
+
