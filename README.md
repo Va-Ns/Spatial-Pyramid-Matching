@@ -45,5 +45,6 @@ Following the notion of the authors, this code is for teaching/research purposes
 
 ## Images 
 
-![image](https://github.com/Va-Ns/Spatial-Pyramid-Matching/assets/68824495/0a42a4ea-6f4e-407f-8e83-a8abdae4ce9c)
+![mermaid-diagram-2024-07-06-235543](https://github.com/Va-Ns/Spatial-Pyramid-Matching/assets/68824495/64712b1b-7c99-4b34-b7f7-635428baeba7)
+
 
