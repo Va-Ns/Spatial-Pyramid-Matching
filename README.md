@@ -2,12 +2,6 @@
 
 This repository contains MATLAB code for performing spatial pyramid matching on a dataset of scene categories. The project includes various scripts for feature extraction, dictionary formation, and classification using support vector machines (SVM).
 
-## Project Highlights
-
-- **Feature Extraction**: Utilizes dense SIFT descriptors to identify points of interest in images.
-- **Dictionary Formation**: Forms a dictionary of visual words using k-means clustering.
-- **Classification**: Uses a Support Vector Machine classifier with hyperparameter optimization.
-
 ## Project Structure
 
 - **denseSIFTVN.m**: Extracts dense SIFT descriptors from the images.
@@ -55,7 +49,7 @@ Following the notion of the authors, this code is for teaching/research purposes
 
 *Progression of the loss function for optimizing one of the hyperparameters of the SVM*
 
-## Table 
+## Table of results
 
 | Pyramid Levels | Number of Centers | Optimization Parameter         | Mean Accuracy         |
 |----------------|-------------------|--------------------------------|-----------------------|
