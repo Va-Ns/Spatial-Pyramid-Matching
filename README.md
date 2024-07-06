@@ -51,3 +51,7 @@ Following the notion of the authors, this code is for teaching/research purposes
 
 *Progression of the loss function for optimizing some of the hyperparameters of the SVM*
 
+![image](https://github.com/Va-Ns/Spatial-Pyramid-Matching/assets/68824495/0bef13bb-69fe-4ce3-88fb-eb535ca6a065)
+
+*Progression of the loss function for optimizing one of the hyperparameters of the SVM*
+
