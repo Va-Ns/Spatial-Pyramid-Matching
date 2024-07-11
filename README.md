@@ -54,15 +54,22 @@ This code is for teaching/research purposes only.
 
 | Pyramid Levels | Number of Centers | Optimization Parameter         | Mean Accuracy         |
 |----------------|-------------------|--------------------------------|-----------------------|
-| 2              | 200               | BoxConstraint                  | 71.7507418397626      |
-| 2              | 200               | BoxConstraint & KernelScale    | 71.3946587537092      |
-| 2              | 200               | All                            | 71.6320474777448      |
-| 2              | 400               | BoxConstraint                  | 71.6023738872404      |
-| 2              | 400               | BoxConstraint & KernelScale    | 71.8397626112760      |
-| 2              | 400               | All                            | 70.5934718100890      |
-| 3              | 200               | BoxConstraint                  | 76.0237388724036      |
-| 3              | 200               | BoxConstraint & KernelScale    | 75.1335311572700      |
-| 3              | 200               | All                            | 76.0534124629080      |
-| 3              | 400               | BoxConstraint                  | 74.6587537091988      |
-| 3              | 400               | BoxConstraint & KernelScale    | 75.9050445103858      |
-| 3              | 400               | All                            | **76.9139465875371**  |
+| 2              | 200               | BoxConstraint                  | 71.7507               |
+| 2              | 200               | BoxConstraint & KernelScale    | 71.3947               |
+| 2              | 200               | All                            | 71.6320               |
+| 2              | 400               | BoxConstraint                  | 71.6024               |
+| 2              | 400               | BoxConstraint & KernelScale    | 71.8398               |
+| 2              | 400               | All                            | 70.5935               |
+| 3              | 200               | BoxConstraint                  | 76.0237               |
+| 3              | 200               | BoxConstraint & KernelScale    | 75.1335               |
+| 3              | 200               | All                            | 76.0534               |
+| 3              | 400               | BoxConstraint                  | 74.6588               |
+| 3              | 400               | BoxConstraint & KernelScale    | 75.9050               |
+| 3              | 400               | All                            | **76.9139**           |
+| 4              | 200               | BoxConstraint                  | 73.2344               |
+| 4              | 200               | BoxConstraint & KernelScale    | 74.5994               |
+| 4              | 200               | All                            | 75.5786               |
+| 4              | 400               | BoxConstraint                  | 75.6083               |
+| 4              | 400               | BoxConstraint & KernelScale    | 75.0742               |
+| 4              | 400               | All                            | 74.2433               |
+
