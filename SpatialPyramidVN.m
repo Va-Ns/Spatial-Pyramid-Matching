@@ -28,8 +28,12 @@ function Pyramid_Vectors = SpatialPyramidVN(input_vector_images, input_features,
         input_vector_images            {mustBeNonempty}
         input_features                 {mustBeA(input_features,"cell")}
         Dictionary                     {mustBeUnderlyingType(Dictionary, 'single')}
+<<<<<<< Updated upstream
         Options.Levels                 {mustBePositive, mustBeInteger, mustBeInRange(Options.Levels, ...
                                                                                          1, 3)} = 3
+=======
+        Options.Levels                 {mustBePositive, mustBeInteger} = 3
+>>>>>>> Stashed changes
     end
 
     binsHigh = 2^(Options.Levels-1);
